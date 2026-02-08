@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Ensure we are in the project root
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$SCRIPT_DIR/.."
+
 echo "🩸 Starting Blood Donor & Alert System..."
 
 # Check if MongoDB is running

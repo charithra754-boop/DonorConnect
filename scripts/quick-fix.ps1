@@ -1,4 +1,5 @@
 # Quick fix script for Windows PowerShell
+Set-Location "$PSScriptRoot\.."
 Write-Host "🔧 Applying quick fixes..." -ForegroundColor Yellow
 
 # Navigate to backend

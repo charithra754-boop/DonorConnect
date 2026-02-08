@@ -1,4 +1,5 @@
 # Start frontend script for Windows PowerShell
+Set-Location "$PSScriptRoot\.."
 Write-Host "🎨 Starting frontend..." -ForegroundColor Green
 
 # Navigate to frontend

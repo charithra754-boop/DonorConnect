@@ -1,4 +1,5 @@
 @echo off
+cd /d "%~dp0\.."
 echo 🩸 Starting Blood Donor & Alert System...
 
 REM Check if MongoDB container exists and start it
