@@ -56,6 +56,7 @@ import SimpleMap from '@/components/SimpleMap'
 import MapStats from '@/components/MapStats'
 import MapNotifications from '@/components/MapNotifications'
 import ProfileEditor from '@/components/ProfileEditor'
+import DemoControls from '@/components/DemoControls'
 
 export default function DonorDashboard() {
   const dispatch = useDispatch<AppDispatch>()
@@ -658,6 +659,9 @@ export default function DonorDashboard() {
         open={profileEditorOpen} 
         onClose={() => setProfileEditorOpen(false)} 
       />
+
+      {/* Demo Controls for Judges */}
+      <DemoControls userRole="donor" />
     </Container>
   )
 }

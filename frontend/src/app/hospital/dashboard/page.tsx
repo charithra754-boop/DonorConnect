@@ -58,6 +58,7 @@ import SimpleMap from '@/components/SimpleMap'
 import MapStats from '@/components/MapStats'
 import MapNotifications from '@/components/MapNotifications'
 import ProfileEditor from '@/components/ProfileEditor'
+import DemoControls from '@/components/DemoControls'
 // import LiveNotifications from '@/components/LiveNotifications'
 
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
@@ -799,6 +800,9 @@ export default function HospitalDashboard() {
         open={profileEditorOpen} 
         onClose={() => setProfileEditorOpen(false)} 
       />
+
+      {/* Demo Controls for Judges */}
+      <DemoControls userRole="hospital" />
     </Container>
   )
 }

@@ -53,6 +53,72 @@ export default function MapNotifications({ userRole }: MapNotificationsProps) {
     const [currentNotification, setCurrentNotification] = useState<MapNotification | null>(null)
 
     useEffect(() => {
+        // Listen for demo triggers
+        const handleDemoTrigger = (event: any) => {
+            const { type, ...data } = event.detail
+            const notificationId = Date.now().toString()
+            let notification: MapNotification
+
+            switch (type) {
+                case 'emergency':
+                    notification = {
+                        id: notificationId,
+                        type: 'emergency',
+                        title: '🚨 DEMO: Emergency Alert',
+                        message: 'Critical O+ request triggered manually',
+                        priority: 'critical',
+                        data: { hospitalName: 'City General', bloodGroup: 'O+', distance: 1.2, timeLeft: '1 hour' },
+                        timestamp: new Date()
+                    }
+                    break
+                case 'camp':
+                    notification = {
+                        id: notificationId,
+                        type: 'camp_reminder',
+                        title: '🏕️ DEMO: Blood Camp',
+                        message: 'New drive at Community Center',
+                        priority: 'medium',
+                        data: { campName: 'Demo Drive', incentive: 'Free T-Shirt', date: 'Tomorrow' },
+                        timestamp: new Date()
+                    }
+                    break
+                case 'donor_found':
+                    notification = {
+                        id: notificationId,
+                        type: 'donor_nearby',
+                        title: '👥 DEMO: Donor Found',
+                        message: 'Found compatible donor nearby',
+                        priority: 'medium',
+                        data: { donorName: 'Demo User', distance: 0.5 },
+                        timestamp: new Date()
+                    }
+                    break
+                case 'response':
+                    notification = {
+                        id: notificationId,
+                        type: 'response_received',
+                        title: '✅ DEMO: Response',
+                        message: 'Donor accepted your request',
+                        priority: 'high',
+                        data: { donorName: 'Sarah M.', eta: '15 mins' },
+                        timestamp: new Date()
+                    }
+                    break
+                default:
+                    return
+            }
+
+            setNotifications(prev => [notification, ...prev.slice(0, 4)])
+            setCurrentNotification(notification)
+            
+            // Auto-hide non-critical demo alerts
+            if (notification.priority !== 'critical') {
+                setTimeout(() => setCurrentNotification(null), 8000)
+            }
+        }
+
+        window.addEventListener('DEMO_TRIGGER_NOTIFICATION', handleDemoTrigger)
+
         // Simulate real-time notifications
         const interval = setInterval(() => {
             generateRandomNotification()
@@ -63,7 +129,10 @@ export default function MapNotifications({ userRole }: MapNotificationsProps) {
             generateRandomNotification()
         }, 3000)
 
-        return () => clearInterval(interval)
+        return () => {
+            clearInterval(interval)
+            window.removeEventListener('DEMO_TRIGGER_NOTIFICATION', handleDemoTrigger)
+        }
     }, [userRole])
 
     const generateRandomNotification = () => {
