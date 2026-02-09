@@ -8,6 +8,7 @@ import { User, UserDocument } from '../schemas/user.schema';
 import { CreateAlertDto } from './dto/create-alert.dto';
 import { RespondToAlertDto } from './dto/respond-to-alert.dto';
 import { NotificationsService } from '../notifications/notifications.service';
+import { SocketGateway } from '../socket/socket.gateway';
 
 @Injectable()
 export class AlertsService {
@@ -17,6 +18,7 @@ export class AlertsService {
     @InjectModel(Hospital.name) private hospitalModel: Model<HospitalDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private notificationsService: NotificationsService,
+    private socketGateway: SocketGateway,
   ) {}
 
   async createAlert(createAlertDto: CreateAlertDto, hospitalUserId: string) {
@@ -52,6 +54,9 @@ export class AlertsService {
       // Update alert with notified donors
       savedAlert.notifiedDonors = eligibleDonors.map(donor => donor._id as any);
       await savedAlert.save();
+
+      // Real-time notification
+      this.socketGateway.emitNewAlert(savedAlert);
     }
 
     // Update hospital stats
@@ -177,6 +182,15 @@ export class AlertsService {
       responseMessage
     );
 
+    // Real-time notification
+    this.socketGateway.emitAlertResponse(hospitalUser._id.toString(), {
+      alertId: alert._id,
+      donorId: donor._id,
+      status: responseDto.status,
+      donorName: donorUser.name,
+      bloodGroup: alert.bloodGroup
+    });
+
     return this.populateAlert(alert);
   }
 
@@ -227,6 +241,9 @@ export class AlertsService {
 
     alert.status = status;
     await alert.save();
+
+    // Real-time notification
+    this.socketGateway.emitAlertUpdate(alert);
 
     return this.populateAlert(alert);
   }

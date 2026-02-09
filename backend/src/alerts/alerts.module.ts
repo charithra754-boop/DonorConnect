@@ -7,6 +7,7 @@ import { Donor, DonorSchema } from '../schemas/donor.schema';
 import { Hospital, HospitalSchema } from '../schemas/hospital.schema';
 import { User, UserSchema } from '../schemas/user.schema';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { SocketModule } from '../socket/socket.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
       { name: User.name, schema: UserSchema },
     ]),
     NotificationsModule,
+    SocketModule,
   ],
   controllers: [AlertsController],
   providers: [AlertsService],
