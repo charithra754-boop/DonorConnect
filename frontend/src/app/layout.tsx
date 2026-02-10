@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   keywords: 'blood donation, emergency alerts, hospital network, save lives, blood donors, medical emergency',
   authors: [{ name: 'BloodMe Team' }],
   robots: 'index, follow',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'BloodMe',
+  },
   openGraph: {
     title: 'BloodMe - Save Lives Through Blood Donation',
     description: 'Revolutionary blood donation platform connecting hospitals with donors',
@@ -26,6 +32,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 1,
+  themeColor: '#d32f2f',
 }
 
 export default function RootLayout({

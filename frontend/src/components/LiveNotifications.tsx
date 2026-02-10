@@ -13,8 +13,13 @@ interface LiveNotificationsProps {
 export default function LiveNotifications({ userId, userRole }: LiveNotificationsProps) {
   const [notifications, setNotifications] = useState<any[]>([])
   const [currentNotification, setCurrentNotification] = useState<any>(null)
+  const [permission, setPermission] = useState<NotificationPermission>('default')
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      setPermission(Notification.permission)
+    }
+
     // Simulate real-time notifications for demo
     const simulateNotifications = () => {
       if (userRole === 'donor') {
@@ -68,8 +73,44 @@ export default function LiveNotifications({ userId, userRole }: LiveNotification
     setCurrentNotification(null)
   }
 
+  const requestPermission = async () => {
+    if (!('Notification' in window)) return
+    try {
+      const result = await Notification.requestPermission()
+      setPermission(result)
+      if (result === 'granted') {
+        toast.success('Notifications enabled! You will receive real-time alerts.')
+        // In a real app, we would subscribe to push notifications here
+        // navigator.serviceWorker.ready.then((registration) => {
+        //   registration.pushManager.subscribe(...)
+        // })
+      }
+    } catch (error) {
+      console.error('Error requesting notification permission:', error)
+    }
+  }
+
   return (
     <>
+      {/* Permission Request Notification */}
+      <Snackbar
+        open={permission === 'default'}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      >
+        <Alert
+          severity="info"
+          icon={<Notifications />}
+          action={
+            <Button color="inherit" size="small" onClick={requestPermission}>
+              ENABLE
+            </Button>
+          }
+          sx={{ boxShadow: 3 }}
+        >
+          Enable notifications for real-time emergency alerts?
+        </Alert>
+      </Snackbar>
+
       {/* Emergency Alert Notification */}
       <Snackbar
         open={!!currentNotification}
